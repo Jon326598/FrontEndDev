@@ -6,7 +6,6 @@ const emailbanco = 'admin@admin.com'
 const senhabanco = '1234'
 
 btnentrar.addEventListener('click', () =>{
-    // alert('Fui clicado pelo javascript')
 
     // 1º pegar o email digitado
     // 2º pegar a senha digitada
