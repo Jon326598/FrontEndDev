@@ -29,6 +29,10 @@
 
 }
 
+label{
+    font-size: 12px;
+}
+
 input, #btn-entrar{
     padding: 8px;
     width: 100%;
@@ -50,5 +54,20 @@ input, #btn-entrar{
 #btn-entrar:hover {
     cursor: pointer;
     background-color: #0000ff;
+
+}
+
+.esqueci-minha-senha{
+    text-align: right;
+    font-style: italic;
+    margin-top: 5px;
+
+
+}
+
+.esqueci-minha-senha a{
+    color: #03a9f4;
+    text-decoration: none;
+    font-size: 12px;
 
 }
