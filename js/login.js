@@ -42,7 +42,7 @@ function autenticar(email, senha){
             salvarToken(response.token);
             salvarUsuario(response.usuario);
             
-            window.open('membro.html', '_self')
+            window.open('controle-membro.html', '_self')
         }
     // if(response.status == 401){
     //     throw erro(response.statusText)
