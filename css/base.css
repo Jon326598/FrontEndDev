@@ -18,3 +18,8 @@ table.table{
 button.btn{
     min-width: 80px;
 }
+
+/* Override */
+div.modal-dialog{
+    max-width: 600px;
+}
