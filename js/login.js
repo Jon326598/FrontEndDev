@@ -11,7 +11,14 @@ btnentrar.addEventListener('click', () =>{
     // 3º validar email e senha digitados
         if(!userEmail || !userSenha){
     // 4º se incorreto retornar mensagem de senha ou usuário incorreto
-        alert("Os campos de email e senha são obrigatórios");
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Os campos de email e senha são obrigatórios!',
+        // footer: '<a href="">Why do I have this issue?</a>',
+        
+      })
+        // alert("Os campos de email e senha são obrigatórios");
         return;
     }
     
@@ -41,26 +48,24 @@ function autenticar(email, senha){
 
             salvarToken(response.token);
             salvarUsuario(response.usuario);
+
+
+            mostrarLoading();
+            setTimeout(() => {
+
+                window.open('controle-membro.html', '_self')
+            }, 3000)
             
-            window.open('controle-membro.html', '_self')
         }
-    // if(response.status == 401){
-    //     throw erro(response.statusText)
-    // }
-});
-// responde = response.json()
-//     .then(response => {
-//         console.log(response)
-//     })
-//     .catch(erro => {
-//         console.log(erro)
-//     })
+    });
 }
 
-function salvarToken(token){
-    localStorage.setItem('token',token)
+function mostrarLoading(){
+    const divLoading = document.querySelector('#loading');
+    divLoading.style.display='block';
+
+    const divBoxLogin = document.querySelector('div.box-login')
+    divBoxLogin.style.display = 'none';
+
 }
 
-function salvarUsuario(usuario){
-    localStorage.setItem('usuario', JSON.stringify(usuario));
-}

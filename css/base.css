@@ -23,3 +23,7 @@ button.btn{
 div.modal-dialog{
     max-width: 600px;
 }
+
+#loading{
+    display: none;
+}

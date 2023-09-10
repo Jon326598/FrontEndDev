@@ -43,7 +43,14 @@ btnSalvar.addEventListener('click', () => {
 
     // 3º novo cadastro de informações
     // alert('Deu certo, vou cadastrar no backend !!')
-    adicionarMembroBackend(membro);
+    if(modoEdicao){
+        atualizarMembroBackend(membro);
+    }else{
+        adicionarMembroBackend(membro);
+    }
+
+    // (modoEdicao) ? atualizarMembroBackend(membro) : adicionarMembroBackend(membro);
+    
 
 
     // modalMembro.hide();
@@ -63,17 +70,21 @@ function obterMembroDoModal(){
         cpfOuCnpj: formModal.cpf.value,
         email: formModal.email.value,
         // dataNasc: formModal.dataNasc.value,
-        // dataCadastro: formModal.dataCadastro.value,
+        // dataCadastro: (formModal.dataCadastro.value)
+        //                 ? new Date(formModal.dataCadastro.value).toISOString()
+        //                 : new Date().toISOString()
         
 
     })
 }
 
-
 function obterMembro(){
 
     fetch(URL, {
-        method: 'GET'
+        method: 'GET',
+        headers:{
+            'Authorization': obterToken()
+        }
     })
 
     .then(response => response.json())
@@ -119,8 +130,15 @@ function limparModalMembro(){
 }
 
 function excluirMembro(id){
-    alert('Aqui vou excluir o membro ' + id);
+    let membro = listaMembro.find(m => m.id == id);
+
+    if(confirm('Deseja realmente excluir o membro ' + membro.nome)){
+
+        excluirMembroBackend(membro);
+    }
+        
 }
+    // alert('Aqui vou excluir o membro ' + id);
 
 function criarLinhaNaTabela(membro){
 
@@ -143,6 +161,7 @@ function criarLinhaNaTabela(membro){
      tdCpf.textContent = membro.cpfOuCnpj;
      tdEmail.textContent = membro.email;
      tdNasc.textContent = membro.datanasc;
+    //  tddataCadastro.textContent = new date (membro.dataCadastro).toLocaleDatestring();
 
      tdAcoes.innerHTML =  `<button onclick="editarMembro(${membro.id})" class="btn btn-primary btn-sm mr-3">
                                 Editar
@@ -188,7 +207,7 @@ function adicionarMembroBackend(membro){
         method: 'POST',
         headers:{
             'Content-Type': 'Application/json',
-            'Authorization': 'token'
+            'Authorization': obterToken()
         },
         body: JSON.stringify(membro)
     })
@@ -201,12 +220,93 @@ function adicionarMembroBackend(membro){
 
         modalMembro.textContent = "";
         modalMembro.hide();
+        Swal.fire({
+            // position: 'top-end',
+            icon: 'success',
+            title: 'Membro adicionado com sucesso !',
+            showConfirmButton: false,
+            timer: 2500
+          })
         
     })
     .catch(error => {
         console.log(error)
     })
 
+}
+
+function atualizarMembroBackend(membro){
+
+    fetch( `${URL}/${membro.id}`,{
+        method: 'PUT',
+        headers:{
+            'Content-Type': 'Application/json',
+            'Authorization': obterToken()
+        },
+        body: JSON.stringify(membro)
+    })
+    .then(response => response.json())
+    .then(() => {
+       
+        atualizarMembroNaLista(membro, false);
+        modalMembro.hide();
+        Swal.fire({
+            // position: 'top-end',
+            icon: 'success',
+            title: 'Atualizado com sucesso !',
+            showConfirmButton: false,
+            timer: 2500
+          })
+        
+    })
+    .catch(error => {
+        console.log(error)
+    })
+
+}
+
+function excluirMembroBackend(membro){
+
+    fetch( `${URL}/${membro.id}`,{
+        method: 'DELETE',
+        headers:{
+            'Content-Type': 'Application/json',
+            'Authorization': obterToken()
+        },
+    })
+    .then(response => response.json())
+    .then(() => {
+       
+        atualizarMembroNaLista(membro, true);
+        modalMembro.hide();
+
+        Swal.fire({
+            // position: 'top-end',
+            icon: 'success',
+            title: 'Membro excluído com sucesso !',
+            showConfirmButton: false,
+            timer: 2500
+          })
+        
+    })
+    .catch(error => {
+        console.log(error)
+    })
+
+}
+
+function atualizarMembroNaLista(membro,removeMembro){
+
+    let indice = listaMembro.findIndex((m) => m.id == membro.id);
+
+    // listaMembro[indice] = membro;
+    (removeMembro) 
+      ? listaMembro.splice(indice, 1)
+      : listaMembro.splice(indice, 1, membro);
+
+    popularTabela(listaMembro);
+
+    modalMembro.hide();
 }
 
 obterMembro();
